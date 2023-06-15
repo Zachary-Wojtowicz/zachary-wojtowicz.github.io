@@ -155,27 +155,27 @@
 
         if (speeds[i] < .01) {
           stopWheel(i);
-        }
 
-        if (results[i] != null) {
           if (results[i]) {
             tallies[i] = String(results.slice(0,i+1).filter(Boolean).length);
           } else {
             tallies[i] = "x";
           }
-        } else {
-          tallies[i] = "";
+
+          if (i==wheelCount-1) {
+            const message = JSON.stringify({
+              message: JSON.stringify(tallies),
+              type: "data"
+            });
+            window.parent.postMessage(message,"*");  
+          }
         }
 
+    
+
       }
 
-      if (results[wheelCount-1] != null){
-        const message = JSON.stringify({
-          message: JSON.stringify(tallies),
-          type: "data"
-        });
-        window.parent.postMessage(message,"*");  
-      }
+      
       
       requestAnimationFrame(gameLoop);
     }
