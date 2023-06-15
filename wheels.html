@@ -112,6 +112,20 @@
       if (isSpinning[i]) {
         isSpinning[i] = false;
         results[i] = rotations[i] >= targetZone.start + Math.PI/2 && rotations[i] <= targetZone.end + Math.PI/2;
+
+        if (results[i]) {
+          tallies[i] = String(results.slice(0,i+1).filter(Boolean).length);
+        } else {
+          tallies[i] = "x";
+        }
+
+        if (i==wheelCount-1) {
+          const message = JSON.stringify({
+            message: JSON.stringify(tallies),
+            type: "data"
+          });
+          window.parent.postMessage(message,"*");  
+        }
       }
     }
 
@@ -154,21 +168,9 @@
         }
 
         if (speeds[i] < .01) {
+
           stopWheel(i);
 
-          if (results[i]) {
-            tallies[i] = String(results.slice(0,i+1).filter(Boolean).length);
-          } else {
-            tallies[i] = "x";
-          }
-
-          if (i==wheelCount-1) {
-            const message = JSON.stringify({
-              message: JSON.stringify(tallies),
-              type: "data"
-            });
-            window.parent.postMessage(message,"*");  
-          }
         }
 
     
