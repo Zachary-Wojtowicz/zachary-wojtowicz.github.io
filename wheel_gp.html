@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<style>
+  body {
+    text-align: center;
+  }
+
+  #game {
+      margin: 0 auto;
+      width: 800px;
+  }
+  
+  .display {
+      position: float;
+      height: 20px;
+      padding: 15px 32px;
+      font-size: 22px;
+  }
+
+  .column {
+    float: left;
+    width: 50%;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #winning-color {
+      position: float;
+      height: 10px;
+      width: 10px;
+      padding: 20px 20px;
+/*      font-size: 22px;*/
+  }
+  
+
+  button {
+      margin-top: 20px;
+      border-radius: 5px;
+      background-color: #a0a0a0;
+      border: none;
+      color: black;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      width: 25%;
+  }
+
+  button:disabled,
+  button[disabled]{
+    background-color: #cccccc;
+    color: #666666;
+  }
+
+</style>
+</head>
+<body>
+  <div id="game">
+      <div class="row">
+        <div class="column">
+          <div id="coin-display" class="display">Your coins: <span id="coin-count"></span></div>  
+        </div>
+        <div class="column">
+          <div id="spins-display" class="display">Spins Remaining: <span id="spin-count"></span></div>
+        </div>
+      </div>
+      <!-- <div id="winning-color-display">Bet Color: <span id="winning-color"></span></div> -->
+      <div id="wheel">
+          <canvas id="roulette" width="400" height="400"></canvas>
+      </div>
+      <div>
+          <button id="bet-button-red" class="bet" style="background-color:#F08080">Bet 20 Red</button>
+          <button id="bet-button-green" class="bet" style="background-color:#9FE2BF">Bet 20 Green</button>
+          <button id="bet-button-blue" class="bet"  style="background-color:#6495ED">Bet 20 Blue</button>
+      </div>
+      <button id="pass-button" style="width: 75%;">No Bet Spin</button>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    
+    var coinCount = 200;
+    var spinCount = 20;
+    var winningColor = '';
+    var colors = ['red', 'green', 'blue'];
+    var colorsHex = ['#F08080', '#9FE2BF', '#6495ED'];
+    var canvas = document.getElementById('roulette');
+    var ctx = canvas.getContext('2d');
+    var angle = 0;
+    var speed = 0;
+    var result = false;
+
+    function drawWheel() {
+        var radius = canvas.width / 3;
+        var sliceAngle = 2 * Math.PI / colors.length;
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+        for (var i = 0; i < colors.length; i++) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, angle + i * sliceAngle - (Math.PI/2), angle + (i + 1) * sliceAngle - (Math.PI/2));
+            ctx.lineTo(centerX, centerY);
+            ctx.fillStyle = colorsHex[i];
+            ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - radius + 0);
+        ctx.lineTo(centerX - 10, centerY - radius - 10);
+        ctx.lineTo(centerX + 10, centerY - radius - 10);
+        ctx.closePath();
+        ctx.fillStyle = "black";
+        ctx.fill();
+    }
+
+    // initialize coin count
+    document.getElementById('coin-count').innerText = coinCount;
+    document.getElementById('spin-count').innerText = spinCount;
+
+    // define bet button
+    var betButtons = document.getElementsByClassName('bet');
+
+    for (var i = 0; i < betButtons.length; i++) {
+        betButtons[i].addEventListener('click', function() {
+        // decrease coin count by 10
+        
+        // updateCoinCount(-20);
+
+        // // randomly select a winning color
+        // winningColor = colors[Math.floor(Math.random() * colors.length)];
+        // document.getElementById('winning-color').style.backgroundColor = winningColor;
+
+        // spin the wheel
+        spinWheel();
+    });
+    }
+
+    document.getElementById('bet-button-blue').addEventListener('click', function() {
+        winningColor = 'blue';
+        // document.getElementById('winning-color').style.backgroundColor = '#6495ED';
+    });
+
+    document.getElementById('bet-button-green').addEventListener('click', function() {
+        winningColor = 'green';
+        // document.getElementById('winning-color').style.backgroundColor = '#9FE2BF';
+    });
+
+    document.getElementById('bet-button-red').addEventListener('click', function() {
+        winningColor = 'red';
+        // document.getElementById('winning-color').style.backgroundColor = '#F08080';
+    });
+
+    document.getElementById('pass-button').addEventListener('click', function() {
+        // clear the winning color
+        winningColor = '';
+        // document.getElementById('winning-color').style.backgroundColor = 'white';
+
+        // spin the wheel
+        spinWheel();
+    });
+
+    function updateCoinCount(x) {
+        coinCount += x;
+        document.getElementById('coin-count').innerText = coinCount;
+    }
+
+    function finalColor() {
+        var colorFinal = '';
+        angleFraction = (angle / (2*Math.PI)) % 1;
+
+        if ((angleFraction >= 0) && (angleFraction < 1/3)) {
+          colorFinal = colors[2];
+        } else if ((angleFraction >= 1/3) && (angleFraction < 2/3)) {
+          colorFinal = colors[1];
+        } else {
+          colorFinal = colors[0];
+        }
+
+        return colorFinal;
+    }
+
+    function spinWheel() {
+
+        if (speed == 0) {
+          speed = .2;
+
+          spinCount -= 1;
+          document.getElementById('spin-count').innerText = spinCount;
+        
+          $('button').prop("disabled",true);
+        }
+
+        angle += speed;
+        speed -= 0.001;
+        drawWheel();
+        if (speed > 0) {
+          // keep spinning
+          requestAnimationFrame(spinWheel);  
+        } else {
+          // stop & test for win
+          speed = 0;
+
+          colorFinal = finalColor();
+
+          if (winningColor!='') {
+            if (winningColor==colorFinal) {
+              updateCoinCount(50);
+            } else {
+              updateCoinCount(-20);
+            }
+          }
+
+          // document.getElementById('winning-color').style.backgroundColor = '';
+
+          $('button').prop("disabled",false);
+        }
+    }    
+
+
+    drawWheel();
+    
+  </script>
+</body>
+</html>
