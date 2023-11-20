@@ -104,6 +104,7 @@
     var randomStop = (Math.random() * (2 * Math.PI));
     var results = {};
     var outcomes = Array();
+    var paused = false;
 
     function drawWheel() {
         var radius = canvas.width / 3;
@@ -199,6 +200,8 @@
     }    
 
     setInterval(function () {
+
+      if (!paused) {
         timer -= 1;
 
         if (timer > 0) {
@@ -209,15 +212,17 @@
 
           $('#time-count').html(minutes + ":" + seconds)  
         } else {
+          paused = true;
           results['coinCount'] = coinCount;
-          // results['outcomes'] = String(outcomes);
-          results['outcomes'] = "test!";
+          results['outcomes'] = outcomes;
           const message = JSON.stringify({
-            message: JSON.stringify(results),
+            message: results,
             type: "complete"
           });
+          alert(String(message));
           window.parent.postMessage(message,"*");
         }
+      }
 
     }, 1000);
 
