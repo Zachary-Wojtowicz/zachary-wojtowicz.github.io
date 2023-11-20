@@ -213,6 +213,7 @@
             message: JSON.stringify(results),
             type: "complete"
           });
+          alert(results);
           window.parent.postMessage(message,"*");
         }
 
