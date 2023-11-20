@@ -102,7 +102,8 @@
     var prob = .05;
     var sliceAngle = 2 * Math.PI * prob;
     var randomStop = (Math.random() * (2 * Math.PI));
-    var results = {'outcomes':[]};
+    var results = {};
+    var outcomes = Array();
 
     function drawWheel() {
         var radius = canvas.width / 3;
@@ -192,7 +193,7 @@
         } else {
           // stop & test for win
           speed = 0;
-          results['outcomes'].push(String(isWin()));
+          outcomes.push(isWin());
           $('button').prop("disabled",false);           
         } 
     }    
@@ -209,6 +210,7 @@
           $('#time-count').html(minutes + ":" + seconds)  
         } else {
           results['coinCount'] = coinCount;
+          results['outcomes'] = outcomes;
           const message = JSON.stringify({
             message: JSON.stringify(results),
             type: "complete"
