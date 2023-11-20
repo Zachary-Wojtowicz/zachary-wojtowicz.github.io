@@ -102,6 +102,7 @@
     var prob = .05;
     var sliceAngle = 2 * Math.PI * prob;
     var randomStop = (Math.random() * (2 * Math.PI));
+    var results = {};
 
 
     function drawWheel() {
@@ -161,9 +162,11 @@
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
-          updateCoinCount(100);
+          return true;
+          // updateCoinCount(100);
         } else {
-          updateCoinCount(-10);
+          return false;
+          // updateCoinCount(-10);
         }
         
     }
@@ -196,12 +199,14 @@
           // stop & test for win
           speed = 0;
 
+          results['bet'] = bet;
+
           if (bet) {
-            isWin();           
+            results['win'] = isWin();           
           } 
 
           const message = JSON.stringify({
-            message: JSON.stringify(win),
+            message: JSON.stringify(results),
             type: "complete"
           });
           window.parent.postMessage(message,"*");
