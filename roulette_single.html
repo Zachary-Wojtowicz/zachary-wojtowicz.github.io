@@ -68,18 +68,18 @@
   <div id="game">
       <div class="row">
         <div class="column">
-          <div id="coin-display" class="display">Your coins: <span id="coin-count"></span></div>  
+          <div id="time-display" class="display">Time Remaining: <span id="time-count"></span></div>
         </div>
         <div class="column">
-          <!-- <div id="spins-display" class="display">Spins Remaining: <span id="spin-count"></span></div> -->
+          <div id="coin-display" class="display">Your coins: <span id="coin-count"></span></div>  
         </div>
       </div>
       <div id="wheel">
           <canvas id="roulette" width="400" height="400"></canvas>
       </div>
       <div>
-          <button id="bet-button" style="width: 25%">Bet</button>
-          <button id="pass-button" style="width: 25%;">Wait</button>
+          <button id="bet-button" style="width: 50%">Bet</button>
+          <!-- <button id="pass-button" style="width: 25%;">Wait</button> -->
       </div>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -90,8 +90,8 @@
 
     
     var coinCount = urlSearchParams.has("coinCount") ? params.coinCount : 200;
+    var timer = urlSearchParams.has("timer") ? params.timer : 30;
     var spinCount = 20;
-    var bet = false;
     var color = '#000000';
     // var color = '#6495ED';
     var canvas = document.getElementById('roulette');
@@ -102,8 +102,7 @@
     var prob = .05;
     var sliceAngle = 2 * Math.PI * prob;
     var randomStop = (Math.random() * (2 * Math.PI));
-    var results = {};
-
+    var results = {'outcomes':[]};
 
     function drawWheel() {
         var radius = canvas.width / 3;
@@ -136,22 +135,20 @@
 
     // initialize coin count
     document.getElementById('coin-count').innerText = coinCount;
-    // document.getElementById('spin-count').innerText = spinCount;
 
 
     document.getElementById('bet-button').addEventListener('click', function() {
-        bet = true;
         spinWheel();
     });
 
 
-    document.getElementById('pass-button').addEventListener('click', function() {
-        // clear the winning color
-        bet = false;
+    // document.getElementById('pass-button').addEventListener('click', function() {
+    //     // clear the winning color
+    //     bet = false;
 
-        // spin the wheel
-        spinWheel();
-    });
+    //     // spin the wheel
+    //     spinWheel();
+    // });
 
     function updateCoinCount(x) {
         coinCount += x;
@@ -162,23 +159,20 @@
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
+          updateCoinCount(100);
           return true;
-          // updateCoinCount(100);
         } else {
+          updateCoinCount(-10);
           return false;
-          // updateCoinCount(-10);
         }
-        
     }
 
     function spinWheel() {
 
+
         if (speed == 0) {
           speed = .3;
           randomStop = (Math.random() * (2 * Math.PI));
-
-          // spinCount -= 1;
-          // document.getElementById('spin-count').innerText = spinCount;
         
           $('button').prop("disabled",true);
         }
@@ -192,29 +186,38 @@
         }
         
         drawWheel();
+
         if (speed > 0) {
           // keep spinning
           requestAnimationFrame(spinWheel);  
         } else {
           // stop & test for win
           speed = 0;
+          results['outcomes'].push(isWin());
+          $('button').prop("disabled",false);           
+        } 
+    }    
 
-          results['bet'] = bet;
+    setInterval(function () {
+        timer -= 1;
 
-          if (bet) {
-            results['win'] = isWin();           
-          } 
+        if (timer > 0) {
+          minutes = parseInt(timer / 60, 10);
+          seconds = parseInt(timer % 60, 10);
 
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          $('#time-count').html(minutes + ":" + seconds)  
+        } else {
+          results['coinCount'] = coinCount;
           const message = JSON.stringify({
             message: JSON.stringify(results),
             type: "complete"
           });
           window.parent.postMessage(message,"*");
-
-          $('button').prop("disabled",false);
         }
-    }    
 
+    }, 1000);
 
     drawWheel();
     
