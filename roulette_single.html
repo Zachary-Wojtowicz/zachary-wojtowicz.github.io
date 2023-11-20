@@ -210,7 +210,7 @@
           $('#time-count').html(minutes + ":" + seconds)  
         } else {
           results['coinCount'] = coinCount;
-          results['outcomes'] = outcomes;
+          results['outcomes'] = String(outcomes);
           const message = JSON.stringify({
             message: JSON.stringify(results),
             type: "complete"
