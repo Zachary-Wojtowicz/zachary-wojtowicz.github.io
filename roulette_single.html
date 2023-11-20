@@ -89,8 +89,8 @@
     const params = Object.fromEntries(urlSearchParams.entries());
 
     
-    var coinCount = urlSearchParams.has("coinCount") ? params.coinCount : 200;
-    var timer = urlSearchParams.has("timer") ? params.timer : 30;
+    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
+    var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 30;
     var spinCount = 20;
     var color = '#000000';
     // var color = '#6495ED';
@@ -140,7 +140,6 @@
     document.getElementById('bet-button').addEventListener('click', function() {
         spinWheel();
     });
-
 
     // document.getElementById('pass-button').addEventListener('click', function() {
     //     // clear the winning color
