@@ -212,14 +212,16 @@
 
           $('#time-count').html(minutes + ":" + seconds)  
         } else {
-          paused = true;
-          results['coinCount'] = coinCount;
-          results['outcomes'] = outcomes;
-          const message = JSON.stringify({
-            message: results,
-            type: "complete"
-          });
-          window.parent.postMessage(message,"*");
+          if (speed == 0) {
+            paused = true;
+            results['coinCount'] = coinCount;
+            results['outcomes'] = outcomes;
+            const message = JSON.stringify({
+              message: results,
+              type: "complete"
+            });
+            window.parent.postMessage(message,"*");  
+          }
         }
       }
 
