@@ -71,14 +71,14 @@
           <div id="time-display" class="display">Time Remaining: <span id="time-count"></span></div>
         </div>
         <div class="column">
-          <div id="coin-display" class="display">Your coins: <span id="coin-count"></span></div>  
+          <div id="coin-display" class="display">Your Tokens: <span id="coin-count"></span></div>  
         </div>
       </div>
       <div id="wheel">
           <canvas id="roulette" width="400" height="400"></canvas>
       </div>
       <div>
-          <button id="bet-button" style="width: 50%">Bet</button>
+          <button id="bet-button" style="width: 50%">Bet 2 Tokens</button>
           <!-- <button id="pass-button" style="width: 25%;">Wait</button> -->
       </div>
   </div>
@@ -89,7 +89,7 @@
     const params = Object.fromEntries(urlSearchParams.entries());
 
     
-    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
+    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 100;
     var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 10;
     var spinCount = 20;
     var color = '#000000';
@@ -160,10 +160,10 @@
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
-          updateCoinCount(100);
+          updateCoinCount(25);
           return true;
         } else {
-          updateCoinCount(-10);
+          updateCoinCount(-2);
           return false;
         }
     }
