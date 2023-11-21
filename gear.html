@@ -50,7 +50,7 @@
 <body>
   <div id="game">
       <div>
-        <div id="instructions-display" class="display"><span id="instructions">Click the gear whenever it turns blue. The task will automatically advance after 2 minutes.</span></div>  
+        <div id="instructions-display" class="display"><span id="instructions">Click the gear whenever it turns blue. The task will automatically advance after 1 minute.</span></div>  
       </div>
       <div>
         <!-- <div class="display"><span >The task will automatically advance after 1 minute.</span></div>   -->
@@ -74,7 +74,7 @@
     var gear_black = "https://cmu.ca1.qualtrics.com/CP/Graphic.php?IM=IM_e9UhcnUOqxjubcN";
     var gear_blue = "https://cmu.ca1.qualtrics.com/CP/Graphic.php?IM=IM_bQ2D30a3MV1U5JX";
 
-    var timer = urlSearchParams.has("timer") ? params.timer : 120;
+    var timer = urlSearchParams.has("timer") ? params.timer : 60;
     var timeOut = 10;
     var degrees = 0;
     var elapsed = 0;
