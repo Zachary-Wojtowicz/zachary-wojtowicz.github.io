@@ -59,6 +59,9 @@
       <div id="wheel">
           <img id="gear" height="200" width="200" src="">
       </div>
+      <div>
+        <div id="fact-display" class="display"><span id="fact"></span></div>  
+      </div>
   </div>
   <div class="modal" id="myModal">
     <div class="modal-content">
@@ -75,92 +78,116 @@
     var gear_blue = "https://cmu.ca1.qualtrics.com/CP/Graphic.php?IM=IM_bQ2D30a3MV1U5JX";
 
     var timer = urlSearchParams.has("timer") ? params.timer : 60;
+    var fun = false;
+    if (urlSearchParams.has("fun") && params.fun==="true") {
+      fun = true;
+    }
     var timeOut = 10;
     var degrees = 0;
     var elapsed = 0;
     var activity = 0;
     var paused = false;
 
-    $('#gear').click(function rotateMe(e) {
+    $('#gear').attr("src",gear_blue);
 
-        degrees += 30;
+    const randomItem = arr => arr.splice((Math.random() * arr.length) | 0, 1);
 
-        $('#gear').css({
-          'transform': 'rotate(' + degrees + 'deg)',
-          '-ms-transform': 'rotate(' + degrees + 'deg)',
-          '-moz-transform': 'rotate(' + degrees + 'deg)',
-          '-webkit-transform': 'rotate(' + degrees + 'deg)',
-          '-o-transform': 'rotate(' + degrees + 'deg)'
-        }); 
+    $.getJSON('https://zachary-wojtowicz.github.io/trivia.json',main);
 
-        $('#gear').attr("src",gear_black);
-        elapsed = 0;
-        activity = 0;
 
-    });
+    function main(data) {
+        var facts = data['facts'];
 
-    $('#gear').attr("src",gear_black);
 
-    // Get the modal
-    var modal = document.getElementById("myModal");
+        setInterval(function () {
 
-    function open_modal() {
-      document.getElementById("modal_text").innerHTML = "The task has been paused and the clock rewound due to inactivity. Click anywhere to resume the task.";
-      modal.style.display = "block";
-      paused = true;
-      timer += timeOut;
-    }
+            if (!paused) {
+              timer -= 1;
+              elapsed += 1;
+              activity += 1;
 
-    function close_modal() {
-        modal.style.display = "none";
-        paused = false;
-        activity = 0;
-    }
-    
-    modal.onclick = function() {
-        close_modal();
-    }
+              if (activity > timeOut) {
+                open_modal();
+              }
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-          close_modal();
-        }
-    }
+              if (elapsed > 7) {
+                $('#gear').attr("src",gear_blue);
+              }
 
-    setInterval(function () {
+              if (timer > 0) {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
 
-        if (!paused) {
-          timer -= 1;
-          elapsed += 1;
-          activity += 1;
+                // minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
 
-          if (activity > timeOut) {
-            open_modal();
-          }
+                $('#time-count').html(minutes + ":" + seconds)  
+              } else {
+                const message = JSON.stringify({
+                  type: "complete"
+                });
+                window.parent.postMessage(message,"*");
+              }
+            }
 
-          if (elapsed > 3) {
-            $('#gear').attr("src",gear_blue);
-          }
+        }, 1000);
 
-          if (timer > 0) {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
 
-            // minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+        // Get the modal
+        var modal = document.getElementById("myModal");
 
-            $('#time-count').html(minutes + ":" + seconds)  
-          } else {
-            const message = JSON.stringify({
-              type: "complete"
-            });
-            window.parent.postMessage(message,"*");
-          }
+        function open_modal() {
+          document.getElementById("modal_text").innerHTML = "The task has been paused and the clock rewound due to inactivity. Click anywhere to resume the task.";
+          modal.style.display = "block";
+          paused = true;
+          timer += timeOut;
         }
 
-    }, 1000);
+        function close_modal() {
+            modal.style.display = "none";
+            paused = false;
+            activity = 0;
+        }
+        
+        modal.onclick = function() {
+            close_modal();
+        }
 
-    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+              close_modal();
+            }
+        }
+
+        $('#gear').click(function rotateMe(e) {
+
+            degrees += 30;
+
+            $('#gear').css({
+              'transform': 'rotate(' + degrees + 'deg)',
+              '-ms-transform': 'rotate(' + degrees + 'deg)',
+              '-moz-transform': 'rotate(' + degrees + 'deg)',
+              '-webkit-transform': 'rotate(' + degrees + 'deg)',
+              '-o-transform': 'rotate(' + degrees + 'deg)'
+            }); 
+
+
+            if ($('#gear').attr('src')==gear_blue) {
+              $('#gear').attr("src",gear_black);
+              elapsed = 0;
+              activity = 0;
+
+              if (fun) {
+                $('#fact-display').html("Fun Fact: " +randomItem(facts))              
+              }
+            }
+
+        });
+
+
+
+    }
+
   </script>
 </body>
 </html>

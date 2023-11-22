@@ -107,7 +107,7 @@
           <button class="bet-button" style="width:125px; height:125px"></button>
         </div>  
       </div>
-      <button id="pass-button" style="width: 50%">Hide</button>
+      <button id="pass-button" style="width: 50%">Skip</button>
       <!-- <button id="pass-button" style="width: 50%">Hide (5&#162;)</button> -->
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -125,12 +125,7 @@
     var winAmountBig = 100;
     var outcomes = Array();
     var paused = false;
-
-    $.getJSON('', function(data) {
-      // JSON result in `data` variable
-      alert(data)
-    });
-
+    
 
     function updateCoinCount(x) {
 
@@ -171,12 +166,13 @@
 
     }, 1000);
 
-
     updateCoinCount(0);
 
     $('.bet-button').html("Scratch (" + cost + "&#162;)");
 
+
     $(function(){
+
         $('.bet-button').click(function() {
             updateCoinCount(cost);
             nonce = Math.random();
@@ -196,9 +192,8 @@
             
             $(this).prop("disabled",true);
         });
+
     });
-
-
 
     document.getElementById('pass-button').addEventListener('click', function() {
         // $('#roulette').hide();
@@ -209,7 +204,6 @@
         // updateCoinCount(-5);
     });
 
-    drawWheel();
 
 
     
