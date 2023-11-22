@@ -126,6 +126,12 @@
     var outcomes = Array();
     var paused = false;
 
+    $.getJSON('', function(data) {
+      // JSON result in `data` variable
+      alert(data)
+    });
+
+
     function updateCoinCount(x) {
 
         coinCount += x;
