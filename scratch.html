@@ -80,31 +80,31 @@
       </div>
       <div class="grid-container">
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-1" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-2" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-3" style="width:125px; height:125px"></button>
         </div>  
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-4" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-5" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-6" style="width:125px; height:125px"></button>
         </div>  
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-7" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-8" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
-          <button class="bet-button" style="width:125px; height:125px"></button>
+          <button class="bet-button" id="bet-button-9" style="width:125px; height:125px"></button>
         </div>  
       </div>
       <button id="pass-button" style="width: 50%">Skip</button>
@@ -116,15 +116,18 @@
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
-    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 100;
+    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
     var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 15;
-    var probSmall = .25;
-    var probBig = .01;
-    var cost = -5;
-    var winAmountSmall = 10;
-    var winAmountBig = 100;
+    var prob = .25;
+    var winAmount = 10;
+    var results = {};
     var outcomes = Array();
     var paused = false;
+    var costs = [5,5,5,5,5,5,5,5,5];
+
+    // for (var i = 0; i <= 9; i++) {
+    //   costs.push(i*2);
+    // }
     
 
     function updateCoinCount(x) {
@@ -151,16 +154,14 @@
 
           $('#time-count').html(minutes + ":" + seconds)  
         } else {
-          if (speed == 0) {
-            paused = true;
-            results['coinCount'] = coinCount;
-            results['outcomes'] = outcomes;
-            const message = JSON.stringify({
-              message: results,
-              type: "complete"
-            });
-            window.parent.postMessage(message,"*");  
-          }
+          paused = true;
+          results['coinCount'] = coinCount;
+          results['outcomes'] = outcomes;
+          const message = JSON.stringify({
+            message: results,
+            type: "complete"
+          });
+          window.parent.postMessage(message,"*");  
         }
       }
 
@@ -168,40 +169,45 @@
 
     updateCoinCount(0);
 
-    $('.bet-button').html("Scratch (" + cost + "&#162;)");
+    for (let i=0; i<=9; i++) {
 
+        $('#bet-button-'+i).html("Scratch (" + costs[i-1] + "&#162;)");
+
+    }
 
     $(function(){
 
-        $('.bet-button').click(function() {
-            updateCoinCount(cost);
-            nonce = Math.random();
-            var winSmall = (nonce < probSmall) ? true : false;
-            var winBig = (probSmall < nonce && nonce < probBig) ? true : false;
-            if (winSmall) {
-              updateCoinCount(winAmountSmall);
-              $(this).html("Win " + winAmountSmall + "&#162;")
-              $(this).css("background-color", "#D1FFC4");
-            } else if (winBig) {
-              updateCoinCount(winAmountBig);
-              $(this).html("Win " + winAmountBig + "&#162;")
-              $(this).css("background-color", "#D1FFC4");
-            } else {
-              $(this).html("");
-            }
-            
-            $(this).prop("disabled",true);
-        });
+        for (let i=0; i<=9; i++) {
+
+          $('#bet-button-'+i).click(function() {
+
+              updateCoinCount(-costs[i-1]);
+
+              var win = (Math.random() < prob) ? true : false;
+              
+              if (win) {
+                updateCoinCount(winAmount);
+                $(this).html("Win " + winAmount + "&#162;")
+                $(this).css("background-color", "#D1FFC4");
+              } else {
+                $(this).html("");
+              }
+              
+              outcomes.push(win);
+
+              $(this).prop("disabled",true);
+
+          });
+
+        }
 
     });
 
     document.getElementById('pass-button').addEventListener('click', function() {
         // $('#roulette').hide();
-        // $('#bet-button').hide();
         $('#roulette').css("visibility", "hidden");
         $('.bet-button').css("visibility", "hidden");
         $('#pass-button').prop("disabled",true);
-        // updateCoinCount(-5);
     });
 
 

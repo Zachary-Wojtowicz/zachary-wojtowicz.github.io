@@ -80,7 +80,7 @@
       <div class="row">
         <div class="column">
           <!-- <button id="bet-button" style="width: 50%">Bet 5 Tokens</button> -->
-          <button id="bet-button" style="width: 50%">Bet (50&#162;)</button>
+          <button id="bet-button" style="width: 50%">Spin (25&#162;)</button>
         </div>
         <div class="column">
           <button id="pass-button" style="width: 50%">Skip</button>
@@ -95,8 +95,8 @@
     const params = Object.fromEntries(urlSearchParams.entries());
 
     
-    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 500;
-    var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 10;
+    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
+    var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 15;
     var color = '#000000';
     // var color = '#6495ED';
     var canvas = document.getElementById('roulette');
@@ -157,10 +157,9 @@
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
-          updateCoinCount(500);
+          updateCoinCount(200);
           return true;
         } else {
-          updateCoinCount(-50);
           return false;
         }
     }
@@ -230,11 +229,15 @@
 
     document.getElementById('bet-button').addEventListener('click', function() {
         spinWheel();
+        updateCoinCount(-25);
         $('button').prop("disabled",true);
     });
 
     document.getElementById('pass-button').addEventListener('click', function() {
-        $('button').prop("disabled",true);
+      $('button').prop("disabled",true);
+
+      $('#bet-button').css("visibility", "hidden");
+      $('#roulette').css("visibility", "hidden");
 
         // // $('#roulette').hide();
         // // $('#bet-button').hide();
