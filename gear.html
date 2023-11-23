@@ -88,6 +88,7 @@
     var activity = 0;
     var paused = false;
 
+    // $('#gear').attr("src",gear_black);
     $('#gear').attr("src",gear_blue);
 
     const randomItem = arr => arr.splice((Math.random() * arr.length) | 0, 1);
@@ -98,6 +99,7 @@
     function main(data) {
         var facts = data['facts'];
 
+        // $('#fact-display').html("Fun Fact: " +randomItem(facts))
 
         setInterval(function () {
 
@@ -110,7 +112,7 @@
                 open_modal();
               }
 
-              if (elapsed > 7) {
+              if (elapsed > 5) {
                 $('#gear').attr("src",gear_blue);
               }
 

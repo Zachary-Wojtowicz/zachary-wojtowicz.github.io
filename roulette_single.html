@@ -96,9 +96,8 @@
 
     
     var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
-    var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 15;
+    var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 10;
     var color = '#000000';
-    // var color = '#6495ED';
     var canvas = document.getElementById('roulette');
     var ctx = canvas.getContext('2d');
     var angle = 0;
@@ -157,7 +156,7 @@
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
-          updateCoinCount(200);
+          updateCoinCount(400);
           return true;
         } else {
           return false;
