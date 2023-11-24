@@ -123,6 +123,9 @@
     var outcomes = Array();
     var paused = false;
     var costs = [5,5,5,5,5,5,5,5,5];
+    var cooldown = 0;
+    var bets = new Array(9).fill(true);
+
 
     // for (var i = 0; i <= 9; i++) {
     //   costs.push(i*2);
@@ -145,6 +148,11 @@
       if (!paused) {
 
           timer -= 1;
+          if (cooldown == 0) {
+            $(".bet-button").prop("disabled",false);
+          } else {
+            cooldown -= 1;
+          }
 
           if (timer > 0) {
 
@@ -183,21 +191,37 @@
 
           $('#bet-button-'+i).click(function() {
 
-              updateCoinCount(-costs[i-1]);
+              if (bets[i-1]) {
 
-              var win = (Math.random() < prob) ? true : false;
-              
-              if (win) {
-                  updateCoinCount(winAmount);
-                  $(this).html("Win " + winAmount + "&#162;")
-                  $(this).css("background-color", "#D1FFC4");
-              } else {
-                  $(this).html("");
+                bets[i-1] = false;
+
+                updateCoinCount(-costs[i-1]);
+
+                var win = (Math.random() < prob) ? true : false;
+                
+                if (win) {
+                    updateCoinCount(winAmount);
+                    $(this).html("Win " + winAmount + "&#162;");
+                    $(this).css("background-color", "#D1FFC4");
+                } else {
+                    $(this).html("");
+                    $(this).css("background-color", "#dcdcdc");
+                }
+                
+                outcomes.push(win);
+
+                $(this).prop("disabled",true);
+
+                cooldown = 1;
+                $(".bet-button").prop("disabled",true);
+
+                if (bets.every(val => val === false)) {
+                    $('.bet-button').html("Scratch (" + costs[i-1] + "&#162;)");
+                    $('.bet-button').css('background-color', '');
+                    bets = new Array(9).fill(true);
+                }
               }
-              
-              outcomes.push(win);
 
-              $(this).prop("disabled",true);
 
           });
 

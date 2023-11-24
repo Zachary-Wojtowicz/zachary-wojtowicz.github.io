@@ -5,8 +5,9 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <style>
+
   body {
-    text-align: center;
+      text-align: center;
   }
 
   #game {
@@ -22,15 +23,14 @@
   }
 
   .column {
-    float: left;
-    width: 50%;
+      float: left;
+      width: 50%;
   }
 
-  /* Clear floats after the columns */
   .row:after {
-    content: "";
-    display: table;
-    clear: both;
+      content: "";
+      display: table;
+      clear: both;
   }
 
   #winning-color {
@@ -38,10 +38,8 @@
       height: 10px;
       width: 10px;
       padding: 20px 20px;
-/*      font-size: 22px;*/
   }
   
-
   button {
       margin-top: 20px;
       border-radius: 5px;
@@ -80,7 +78,7 @@
       <div class="row">
         <div class="column">
           <!-- <button id="bet-button" style="width: 50%">Bet 5 Tokens</button> -->
-          <button id="bet-button" style="width: 50%">Spin (25&#162;)</button>
+          <button id="bet-button" style="width: 50%">Spin (5&#162;)</button>
         </div>
         <div class="column">
           <button id="pass-button" style="width: 50%">Hide</button>
@@ -94,7 +92,6 @@
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
-    
     var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
     var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 10;
     var color = '#000000';
@@ -111,6 +108,7 @@
     var paused = false;
 
     function drawWheel() {
+
         var radius = canvas.width / 3;
         
         var centerX = canvas.width / 2;
@@ -137,11 +135,13 @@
         ctx.closePath();
         ctx.fillStyle = "black";
         ctx.fill();
+
     }
 
 
 
     function updateCoinCount(x) {
+
         coinCount += x;
         dollars = parseInt(coinCount / 100, 10);
         cents = parseInt(coinCount % 100, 10);
@@ -149,14 +149,14 @@
 
         $('#coin-count').html("$" + dollars + "." + cents)  
 
-        // document.getElementById('coin-count').innerText = coinCount;
     }
 
     function isWin() {
+
         angleFraction = angle % (2*Math.PI) ;
 
         if ((angleFraction >= 0) && (angleFraction < sliceAngle)) {
-          updateCoinCount(400);
+          updateCoinCount(75);
           return true;
         } else {
           return false;
@@ -191,7 +191,7 @@
           // stop & test for win
           speed = 0;
           outcomes.push(isWin());
-          // $('button').prop("disabled",false);           
+          $('button').prop("disabled",false);           
         } 
     }    
 
@@ -223,28 +223,22 @@
 
     }, 1000);
 
-
     updateCoinCount(0);
 
     document.getElementById('bet-button').addEventListener('click', function() {
+
         spinWheel();
-        updateCoinCount(-25);
+        updateCoinCount(-5);
         $('button').prop("disabled",true);
+
     });
 
     document.getElementById('pass-button').addEventListener('click', function() {
-      $('button').prop("disabled",true);
 
+      $('button').prop("disabled",true);
       $('#bet-button').css("visibility", "hidden");
       $('#roulette').css("visibility", "hidden");
 
-        // // $('#roulette').hide();
-        // // $('#bet-button').hide();
-        // $('#roulette').css("visibility", "hidden");
-        // // $('button').css("visibility", "hidden");
-        // $('#bet-button').css("visibility", "hidden");
-        // $('#pass-button').prop("disabled",true);
-        // // updateCoinCount(-5);
     });
 
     drawWheel();
