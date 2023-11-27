@@ -6,7 +6,7 @@
 <meta http-equiv="Expires" content="0" />
 <style>
   body {
-    text-align: center;
+      text-align: center;
   }
 
   #game {
@@ -22,26 +22,30 @@
   }
 
   .column {
-    float: left;
-    width: 50%;
+      float: left;
+      width: 50%;
   }
 
   .row:after {
-    content: "";
-    display: table;
-    clear: both;
+      content: "";
+      display: table;
+      clear: both;
   }
 
   .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 5px;
-    gap: 10px 10px;
+      display: grid;
+      grid-template-columns: auto auto auto auto auto;
+/*      padding: 5px;*/
+      padding: 0px;
+/*      gap: 10px 10px;*/
+      gap: 2px 2px;
   }
   .grid-item {
-    padding: 15px;
-    font-size: 30px;
-    text-align: center;
+/*      padding: 15px;*/
+      padding: 15px;
+/*      font-size: 30px;*/
+/*      font-size: 16px;*/
+      text-align: center;
   }
   
 
@@ -56,7 +60,7 @@
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
-      width: 25%;
+      width: 15%;
   }
 
   button:disabled,
@@ -77,36 +81,35 @@
           <div id="coin-display" class="display">Your Bonus: <span id="coin-count"></span></div>  
         </div>
       </div>
-      <div class="grid-container">
+      <div class="grid-container" id="grid">
+        <!-- <div class="grid-item">
+          <button class="bet-button" id="bet-button-0" style="width:125px; height:125px"></button>
+        </div>
         <div class="grid-item">
           <button class="bet-button" id="bet-button-1" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
           <button class="bet-button" id="bet-button-2" style="width:125px; height:125px"></button>
-        </div>
+        </div>  
         <div class="grid-item">
           <button class="bet-button" id="bet-button-3" style="width:125px; height:125px"></button>
-        </div>  
+        </div>
         <div class="grid-item">
           <button class="bet-button" id="bet-button-4" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
           <button class="bet-button" id="bet-button-5" style="width:125px; height:125px"></button>
-        </div>
+        </div>  
         <div class="grid-item">
           <button class="bet-button" id="bet-button-6" style="width:125px; height:125px"></button>
-        </div>  
-<!--         <div class="grid-item">
+        </div>
+        <div class="grid-item">
           <button class="bet-button" id="bet-button-7" style="width:125px; height:125px"></button>
         </div>
         <div class="grid-item">
           <button class="bet-button" id="bet-button-8" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-9" style="width:125px; height:125px"></button>
         </div>   -->
       </div>
-      <!-- <button id="pass-button" style="width: 50%">Hide</button> -->
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
@@ -115,19 +118,21 @@
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
 
-    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 200;
+    var coinCount = urlSearchParams.has("coinCount") ? parseInt(params.coinCount) : 0;
     var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 30;
+    // shift to tenths of a second
+    var timer = timer * 10;
     var prob = .98;
-    var winAmount = 1;
+    var winAmount = 5;
     var loseAmount = 100;
     var results = {};
     var outcomes = Array();
     var paused = false;
     var cost = 0;
     var cooldown = -1;
-    var n = 6;
-    var bets = new Array(n).fill(true);
-
+    var n = 25;
+    var bets = new Array(n).fill('');
+    var nLose = Math.floor(Math.random() * n);
 
     function updateCoinCount(x) {
 
@@ -139,26 +144,90 @@
     
     }
 
+    function resetBets() {
+
+        $('.bet-button').html("Scratch");
+        $('.bet-button').css('background-color', '');
+        bets = new Array(n).fill(true);
+        $(".bet-button").prop("disabled",false);
+
+    }
+
+    function checkBet(i) {
+        
+        const win = (nLose!=i) ? true : false
+
+
+        if (win) {
+            bets[i] = "win";
+            updateCoinCount(winAmount);
+            $('#bet-button-'+i).html("Win " + winAmount + "&#162;");
+            $('#bet-button-'+i).css("background-color", "#D1FFC4");
+            $('.bet-button').prop("disabled",false);
+        } else {
+            updateCoinCount(-coinCount);
+            $('#bet-button-'+i).html("Lose");
+            $('#bet-button-'+i).css("background-color", "#FFAFAF");
+        }
+        
+        outcomes.push(win);
+
+        $('#bet-button-'+i).prop("disabled",true);
+
+        // if (bets.every(val => val === false)) {
+        //     cooldown = 0;
+        // }
+
+    }
+
+    function createKey(i) {
+
+        grid = document.getElementById("grid");
+        const gridItem = document.createElement("grid-item");
+        gridItem.id = "grid-item-" + i;
+        grid.appendChild(gridItem)
+
+        const button = document.createElement("button");
+        button.className = "bet-button";
+        button.style = "width:125px; height:125px";
+        button.id = "bet-button-" + i;
+        button.innerText = "Scratch";
+        gridItem.appendChild(button);
+
+    }
+
 
     setInterval(function () {
 
       if (!paused) {
 
           timer -= 1;
+
           if (cooldown == 0) {
-              $('.bet-button').html("Scratch");
-              $('.bet-button').css('background-color', '');
-              bets = new Array(n).fill(true);
-              $(".bet-button").prop("disabled",false);
+
               cooldown = -1;
+              // $(".bet-button").prop("disabled",false);
+
+              for (let i=0; i<n; i++) {
+
+                  if (bets[i] == 'clicked') {
+
+                      checkBet(i);
+
+                  }
+
+              }
+
+
           } else {
               cooldown -= 1;
           }
 
           if (timer > 0) {
 
-              minutes = parseInt(timer / 60, 10);
-              seconds = parseInt(timer % 60, 10);
+              minutes = parseInt(timer / 600, 10);
+              miliseconds = parseInt(timer % 600, 10);
+              seconds = parseInt(miliseconds / 10, 10);
               seconds = seconds < 10 ? "0" + seconds : seconds;
               $('#time-count').html(minutes + ":" + seconds)  
 
@@ -176,68 +245,27 @@
 
       }
 
-    }, 1000);
+    }, 100);
 
     updateCoinCount(0);
 
-    for (let i=0; i<=n; i++) {
-
-        $('#bet-button-'+i).html("Scratch");
-
-    }
-
     $(function(){
 
-        for (let i=0; i<=n; i++) {
+        for (let i=0; i<n; i++) {
+
+            createKey(i);
 
             $('#bet-button-'+i).click(function() {
 
-
-                if (bets[i-1]) {
-
-                    bets[i-1] = false;
-
-                    var win = (Math.random() < prob) ? true : false;
-                    
-                    if (win) {
-                        updateCoinCount(winAmount);
-                        $(this).html("Win " + winAmount + "&#162;");
-                        $(this).css("background-color", "#D1FFC4");
-                    } else {
-                        updateCoinCount(-loseAmount);
-                        $(this).html("Lose " + loseAmount + "&#162;");
-                        $(this).css("background-color", "#FFAFAF");
-                        $('.bet-button').prop("disabled",true);
-                        // cooldown = -1;
-                    }
-                    
-                    outcomes.push(win);
-
-                    $(this).prop("disabled",true);
-
-                    if (bets.every(val => val === false)) {
-                        cooldown = 0;
-                    }
-                    
-                    // $(".bet-button").prop("disabled",true);
-
-                }
+                bets[i] = 'clicked';
+                $(".bet-button").prop("disabled",true);
+                cooldown = 5;
 
             });
 
-          }
+        }
 
     });
-
-    // document.getElementById('pass-button').addEventListener('click', function() {
-
-    //     $('#roulette').css("visibility", "hidden");
-    //     $('.bet-button').css("visibility", "hidden");
-    //     $('#pass-button').prop("disabled",true);
-
-    // });
-
-
 
     
   </script>
