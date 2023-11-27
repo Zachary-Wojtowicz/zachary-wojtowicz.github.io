@@ -42,7 +42,7 @@
   }
   .grid-item {
 /*      padding: 15px;*/
-      padding: 15px;
+      padding: 5px;
 /*      font-size: 30px;*/
 /*      font-size: 16px;*/
       text-align: center;
@@ -55,7 +55,8 @@
       background-color: #a0a0a0;
       border: none;
       color: black;
-      padding: 15px 15px;
+/*      padding: 15px 15px;*/
+      padding: 0px 0px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
@@ -84,30 +85,6 @@
       <div class="grid-container" id="grid">
         <!-- <div class="grid-item">
           <button class="bet-button" id="bet-button-0" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-1" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-2" style="width:125px; height:125px"></button>
-        </div>  
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-3" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-4" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-5" style="width:125px; height:125px"></button>
-        </div>  
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-6" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-7" style="width:125px; height:125px"></button>
-        </div>
-        <div class="grid-item">
-          <button class="bet-button" id="bet-button-8" style="width:125px; height:125px"></button>
         </div>   -->
       </div>
   </div>
@@ -189,7 +166,7 @@
 
         const button = document.createElement("button");
         button.className = "bet-button";
-        button.style = "width:125px; height:125px";
+        button.style = "width:100px; height:100px";
         button.id = "bet-button-" + i;
         button.innerText = "Scratch";
         gridItem.appendChild(button);
