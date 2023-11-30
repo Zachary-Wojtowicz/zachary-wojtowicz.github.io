@@ -10,6 +10,44 @@
       text-align: center;
   }
 
+  .box {
+/*      float: left;*/
+      height: 25px;
+      width: 25px;
+      margin-bottom: 5px;
+      margin-right: 5px;
+      margin-left: 5px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+/*      width: 40%;*/
+/*      border: 1px solid black;*/
+/*      clear: both;*/
+  }
+
+  .center {
+      margin: auto;
+/*      width: 50%;*/
+/*      border: 3px solid green;*/
+/*      padding: 10px;*/
+  }
+
+.child {
+    display: inline-block;
+/*    border: 1px solid red;*/
+    padding: .2rem .2rem;
+    vertical-align: middle;
+    margin: 5px;
+}
+
+  .gray {
+      background-color: #717171;
+  }
+
+  .black {
+      background-color: black;
+  }
+
   #game {
       margin: 0 auto;
       width: 800px;
@@ -72,12 +110,19 @@
           <div id="coin-display" class="display">Your Bonus: <span id="coin-count"></span></div>  
         </div>
       </div>
+      <div class="center">
+        <div class='box gray child'></div>
+        <span class='child' style='font-size:14pt'>25% chance of $0.10</span>
+        <span style='margin-left: 30px'></span>
+        <div class='box black child'></div>
+        <span class='child' style='font-size:14pt'>2% chance of $1.00</span>
+      </div>
       <div id="wheel">
           <canvas id="roulette" width="400" height="400"></canvas>
       </div>
 
       <div class="row">
-        <button id="bet-button" style="width: 50%">Spin (5&#162;)</button>
+        <button id="bet-button" style="width: 50%">Spin (costs 5&#162;)</button>
 <!--         <div class="column">
           <button id="bet-button" style="width: 100%">Spin (5&#162;)</button>
         </div>
@@ -139,7 +184,8 @@
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        drawSlice(0,2*Math.PI, '#C0C0C0');
+        // drawSlice(0,2*Math.PI, '#C0C0C0');
+        drawSlice(0,2*Math.PI, '#cdcdcd');
         drawSlice(angle - (sliceAngleSmall+sliceAngleBig)/2, angle + (sliceAngleSmall+sliceAngleBig)/2, '#717171');
         drawSlice(angle - sliceAngleSmall/2, angle + sliceAngleSmall/2, 'black');
 
