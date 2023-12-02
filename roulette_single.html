@@ -112,17 +112,17 @@
       </div>
       <div class="center">
         <div class='box gray child'></div>
-        <span class='child' style='font-size:14pt'>25% chance of winning $0.10</span>
+        <span class='child' style='font-size:14pt'>25% chance of winning $0.15</span>
         <span style='margin-left: 30px'></span>
         <div class='box black child'></div>
-        <span class='child' style='font-size:14pt'>2% chance of winning $1.00</span>
+        <span class='child' style='font-size:14pt'>2% chance of winning $1.50</span>
       </div>
       <div id="wheel">
           <canvas id="roulette" width="400" height="400"></canvas>
       </div>
 
       <div class="row">
-        <button id="bet-button" style="width: 50%">Spin (costs 5&#162;)</button>
+        <button id="bet-button" style="width: 50%">Spin (costs 10&#162;)</button>
 <!--         <div class="column">
           <button id="bet-button" style="width: 100%">Spin (5&#162;)</button>
         </div>
@@ -209,10 +209,10 @@
         var angleShifted = (angle + (1/2) * Math.PI) % (2*Math.PI);
 
         if ((2*Math.PI - sliceAngleSmall/2 <= angleShifted) || (angleShifted < sliceAngleSmall/2)) {
-          updateCoinCount(100);
+          updateCoinCount(150);
           return "big";
         } else if ((2*Math.PI - (sliceAngleSmall+sliceAngleBig)/2 <= angleShifted) || (angleShifted < (sliceAngleSmall+sliceAngleBig)/2)) {
-          updateCoinCount(10);
+          updateCoinCount(15);
           return "small";
         } else {
           return "loss";
@@ -284,7 +284,7 @@
     document.getElementById('bet-button').addEventListener('click', function() {
 
         spinWheel();
-        updateCoinCount(-5);
+        updateCoinCount(-10);
         $('button').prop("disabled",true);
 
     });
