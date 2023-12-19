@@ -78,9 +78,9 @@
     var gear_blue = "https://cmu.ca1.qualtrics.com/CP/Graphic.php?IM=IM_bQ2D30a3MV1U5JX";
 
     var timer = urlSearchParams.has("timer") ? params.timer : 60;
-    var fun = false;
-    if (urlSearchParams.has("fun") && params.fun==="true") {
-      fun = true;
+    var stimulation = false;
+    if (urlSearchParams.has("stimulation") && params.stimulation==="true") {
+      stimulation = true;
     }
     var timeOut = 10;
     var degrees = 0;
@@ -179,7 +179,7 @@
               elapsed = 0;
               activity = 0;
 
-              if (fun) {
+              if (stimulation) {
                 $('#fact-display').html("Fun Fact: " +randomItem(facts))              
               }
             }
