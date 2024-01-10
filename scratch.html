@@ -99,7 +99,6 @@
     var timer = urlSearchParams.has("timer") ? parseInt(params.timer) : 30;
     // shift to tenths of a second
     var timer = timer * 10;
-    var prob = .98;
     var winAmount = 5;
     var loseAmount = 100;
     var results = {};
@@ -107,7 +106,7 @@
     var paused = false;
     var cost = 0;
     var cooldown = -1;
-    var n = 25;
+    var n = 10;
     var bets = new Array(n).fill('');
     var nLose = Math.floor(Math.random() * n);
 
